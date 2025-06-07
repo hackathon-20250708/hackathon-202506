@@ -17,9 +17,9 @@ def analyze_audio():
 
     dummy_result = {
         "words": [
-            {"text": "こんにちは", "emotion": "neutral"},
-            {"text": "最悪", "emotion": "angry"},
-            {"text": "まあまあ", "emotion": "calm"},
+            {"text": "こんにちは", "emotion": "neu"},
+            {"text": "最悪", "emotion": "ang"},
+            {"text": "まあまあ", "emotion": "hap"},
             {"text": "悲しい", "emotion": "sad"}
         ]
     }
