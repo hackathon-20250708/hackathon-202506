@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>感情分析文字起こしアプリ</title>
+  <link rel="stylesheet" href="UIdesighn.css">
+</head>
+<body>
+  <div class="container">
+    <h1>感情分析文字起こしアプリ</h1> <!-- タイトル -->
+    <p>音声ファイルをアップロードしてください</p>
+    
+    <input type="file" id="audioInput" accept="audio/*"> <!-- ファイル選択 -->
+    <button onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
+
+    <div id="result"></div> <!-- 結果表示エリア -->
+  </div>
+
+  <script>
+    async function uploadAudio() {
+      const file = document.getElementById('audioInput').files[0];
+      const formData = new FormData();
+      formData.append("audio", file);
+
+      const res = await fetch("http://localhost:5000/analyze", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+
+      data.words.forEach(item => {
+        const span = document.createElement("span");
+        span.className = item.emotion;
+        span.textContent = item.text + " ";
+        resultDiv.appendChild(span);
+      });
+    }
+  </script>
+</body>
+</html>

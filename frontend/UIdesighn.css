@@ -1,0 +1,55 @@
+body {
+  background-color: transparent; /* 透過背景 */
+  font-family: 'Helvetica Neue', sans-serif;
+  color: #222;
+  text-align: center;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明の白 */
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+input[type="file"] {
+  margin-top: 1rem;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
+
+/* 感情による色分け */
+.neu { color: black; }
+.hap { color: orange; }
+.ang { color: red; }
+.sad { color: blue; }
+
+#result {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  line-height: 2;
+}
