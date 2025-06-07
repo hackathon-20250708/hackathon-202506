@@ -15,7 +15,17 @@ def analyze_audio():
 
     analyzed_result = analyze_emotion(audio_path)  # ← emotion_analyzer.pyの関数を実行
 
-    return jsonify({"words": analyzed_result})
+    dummy_result = {
+        "words": [
+            {"text": "こんにちは", "emotion": 1},
+            {"text": "最悪", "emotion": 2},
+            {"text": "まあまあ", "emotion": 0},
+            {"text": "悲しい", "emotion": 3}
+        ]
+    }
+    return jsonify(dummy_result)
+
+    #return jsonify({"words": analyzed_result})
 
 if __name__ == '__main__':
     app.run(debug=True)
