@@ -27,7 +27,7 @@ class AudioTranscriber:
         genai.configure(api_key=api_key)
 
         # モデルの初期化
-        self.model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+        self.model = genai.GenerativeModel(model_name="models/gemini-2.0-flash-lite")
 
     def transcribe(self, wav_file_path: str) -> str:
         """
