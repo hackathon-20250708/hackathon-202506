@@ -13,41 +13,39 @@ import os
 
 class AudioTranscriber:
     """
-    Google Geminiを使ってWAV音声ファイルを日本語で文字起こしするクラス
+    Google Gemini 2.0 Flash を使って音声ファイルを日本語で文字起こしするクラス
     """
 
     def __init__(self, env_path=".env"):
-        # 環境変数（APIキー）の読み込み
+        # .env から API キー読み込み
         load_dotenv(env_path)
         api_key = os.getenv("GEMINI_API_KEY")
+        print(list(os.environ.keys()))
         if not api_key:
-            raise ValueError("API_KEYが環境変数に設定されていません。.envファイルを確認してください。")
+            raise ValueError("GEMINI_API_KEY が環境変数に設定されていません。")
 
-        # Geminiクライアントの初期化
-        self.client = genai.Client(api_key=api_key)
+        # Gemini API キーを設定
+        genai.configure(api_key=api_key)
+
+        # モデルの初期化
+        self.model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
 
     def transcribe(self, wav_file_path: str) -> str:
         """
-        指定されたWAVファイルを日本語で文字起こしして返す
-
-        Parameters:
-            wav_file_path (str): 音声ファイル（.wav）のパス
-
-        Returns:
-            str: 文字起こし結果のテキスト
+        音声ファイルを日本語で文字起こしする
         """
         try:
             # ファイルアップロード
-            print(f"アップロード中: {wav_file_path}")
-            uploaded_file = self.client.files.upload(file=wav_file_path)
+            uploaded_file = genai.upload_file(wav_file_path)
+            print(f"ファイルをアップロードしました: {uploaded_file.uri}")
 
-            # モデルに日本語での文字起こしを依頼
-            response = self.client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=["この音声ファイルの内容を日本語で文字起こししてください", uploaded_file]
+            # 文字起こしリクエスト
+            response = self.model.generate_content(
+                [
+                    "この音声ファイルの内容を日本語で文字起こししてください。",
+                    uploaded_file
+                ]
             )
-            
-            print(response.text)
 
             return response.text
 

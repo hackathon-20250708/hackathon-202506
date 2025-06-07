@@ -37,3 +37,10 @@ def analyze_emotion(audio_path: str) -> str:
 
     labels = model.config.id2label
     return labels[predicted_class_id]
+
+if __name__ == "__main__":
+    transcriber = analyze_emotion("sample_sounds/6月なのに暑すぎませんか.wav")
+    result = transcriber
+    print(result)
+
+# → {0: 'neu', 1: 'hap', 2: 'ang', 3: 'sad'}
