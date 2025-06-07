@@ -19,6 +19,7 @@ class AudioTranscriber:
         # .env から API キー読み込み
         load_dotenv(env_path)
         api_key = os.getenv("GEMINI_API_KEY")
+        print(list(os.environ.keys()))
         if not api_key:
             raise ValueError("GEMINI_API_KEY が環境変数に設定されていません。")
 
