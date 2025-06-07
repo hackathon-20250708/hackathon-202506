@@ -17,12 +17,13 @@ def analyze_audio():
 
     dummy_result = {
         "words": [
-            {"text": "こんにちは", "emotion": 1},
-            {"text": "最悪", "emotion": 2},
-            {"text": "まあまあ", "emotion": 0},
-            {"text": "悲しい", "emotion": 3}
+            {"text": "こんにちは", "emotion": "neutral"},
+            {"text": "最悪", "emotion": "angry"},
+            {"text": "まあまあ", "emotion": "calm"},
+            {"text": "悲しい", "emotion": "sad"}
         ]
     }
+
     return jsonify(dummy_result)
 
     #return jsonify({"words": analyzed_result})
