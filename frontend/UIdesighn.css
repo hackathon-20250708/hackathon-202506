@@ -14,17 +14,30 @@ body {
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  max-width: 600px;
+  max-width: 1000px;
   margin: auto;
 }
 
 .result{
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: transparent; /* 透過背景 */
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  max-width: 600px;
+  max-width: 1000px;
   margin: auto;
+}
+
+.subti{
+  position: relative; top: 25px;
+}
+
+.tit{
+  position: relative; top: 20px;
+}
+
+.explan{
+  padding-top:20px;
+  text-align:center;
 }
 
 h1 {

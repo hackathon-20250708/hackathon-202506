@@ -7,8 +7,16 @@
 </head>
 <body>
   <div class="container">
-    <h1>声彩 -Seisai-</h1> <!-- タイトル -->
-    <p>音声ファイルをアップロードしてください</p>
+    <div class="tit">
+      <p class="subti">声の感情に応じて文字を彩るシステム</p>
+      <h1>声彩 -Seisai-</h1> <!-- タイトル -->
+    </div>
+    <div class="explan">
+      <p>1.音声ファイルをアップロード、または録音開始ボタンよりマイクで録音を開始</p>
+      <p>2.音声ファイルの場合は送信ボタンを押してください</p>
+      <p>3.下枠に出力結果が表示されます</p>
+      <p>※録音の場合、リアルタイムに結果が表示されます。終了時にのみ録音停止ボタンを押してください。</p>
+    </div>
     
     <input type="file" id="audioInput" accept="audio/*"> <!-- ファイル選択 -->
     <button onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
