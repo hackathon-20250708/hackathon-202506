@@ -9,7 +9,11 @@
   <div class="container">
     <div class="tit">
       <p class="subti">声の感情に応じて文字を彩るシステム</p>
-      <h1>声彩 -Seisai-</h1> <!-- タイトル -->
+      <h1 class="rainbow">
+        <span>声</span><span>彩</span><span>-</span><span>S</span><span>e</span><span>i</span><span>s</span><span>a</span><span>i</span><span>-</span>
+      </h1>
+      <!-- <h1 class="heading-31">声彩 -Seisai-</h1>  -->
+      <!-- タイトル -->
     </div>
     <div class="explan">
       <p>1.音声ファイルをアップロード、または録音開始ボタンよりマイクで録音を開始</p>
@@ -20,7 +24,7 @@
     
     <div class="select">
     <input type="file" id="audioInput" accept="audio/*"> <!-- ファイル選択 -->
-    <button onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
+    <button class="button-45" onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
 
       <div class="realtime">
         <p class="mic">マイクから録音</p>

@@ -47,11 +47,25 @@ h1 {
   color: #333;
 }
 
+.rainbow span {
+    animation: rainbow 2s infinite;
+    display: inline-block;
+  }
+
+  @keyframes rainbow {
+    0%   { color: red; }
+    20%  { color: orange; }
+    40%  { color: yellow; }
+    60%  { color: green; }
+    80%  { color: blue; }
+    100% { color: purple; }
+  }
+
 input[type="file"] {
   margin-top: 1rem;
 }
 
-button {
+/* button {
   margin-top: 1rem;
   margin-right: 10px;
   padding: 10px 20px;
@@ -66,7 +80,33 @@ button {
 
 button:hover {
   background-color: #2563eb;
+} */
+
+button {
+  margin-top: 1rem;
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  width: 125px;
+  border: 1px solid #2589d0;
+  border-radius: 25px;
+  background-color: #fff;
+  color: #2589d0;
 }
+
+button:hover {
+    animation: anima-button 1s;
+}
+
+@keyframes anima-button {
+    0% {
+        box-shadow: 0 0 0 0 rgb(37 137 208 / 50%);
+    }
+    100% {
+        box-shadow: 0 0 0 1.2em rgb(0 0 0 / 0%);
+    }
+}
+
 
 .mic{
   position: relative; top: 8px;
@@ -79,6 +119,7 @@ button:hover {
   justify-content: center;
   align-items: center; 
 }
+
 
 /* 感情による色分け */
 .neu { color: black; }
