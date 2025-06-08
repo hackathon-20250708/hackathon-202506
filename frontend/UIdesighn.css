@@ -8,7 +8,9 @@ body {
 }
 
 .container {
-  background-color: rgba(255, 255, 255, 0.8); /* 半透明の白 */
+  /* background-color: rgba(255, 255, 255, 0.8); 半透明の白 */
+  background-image:url(background.png);
+  background-size:cover;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
