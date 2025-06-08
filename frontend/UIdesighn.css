@@ -9,7 +9,7 @@ body {
 
 .container {
   /* background-color: rgba(255, 255, 255, 0.8); 半透明の白 */
-  background-image:url(background.png);
+  background-image:linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),url(background.png);
   background-size:cover;
   border-radius: 16px;
   padding: 2rem;
@@ -33,6 +33,7 @@ body {
 
 .tit{
   position: relative; top: 20px;
+  text-shadow: 0px 0px 10px #f1f4ff;
 }
 
 .explan{
