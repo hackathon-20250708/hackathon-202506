@@ -11,7 +11,7 @@ from emotion_analyzer import analyze_emotion
 from transcription import AudioTranscriber
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:8000"]) 
 
 def convert_webm_to_wav(input_path):
     """
@@ -79,6 +79,55 @@ def analyze_audio():
     #     ]
     # }
     # return jsonify(dummy_result)
+
+# グローバル履歴リスト
+global_results = []
+
+@app.route('/realTime', methods=['POST'])
+def realTime():
+    global global_results
+
+    file = request.files['audio']
+
+    ext = os.path.splitext(file.filename)[1]
+    suffix = ext if ext else ".webm"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        file.save(tmp.name)
+        input_path = tmp.name
+
+    if suffix == ".webm":
+        audio_path = convert_webm_to_wav(input_path)
+        os.remove(input_path)
+    else:
+        audio_path = input_path
+
+    transcriber = AudioTranscriber()
+
+    try:
+        emotion = analyze_emotion(audio_path)
+    except Exception as e:
+        emotion = "err"
+
+    try:
+        text = transcriber.transcribe(audio_path)
+        text = text.strip().replace("\n", "")
+    except Exception as e:
+        text = "エラー"
+
+    os.remove(audio_path)
+
+    # 文字起こしがあれば履歴に追加
+    if text:
+        global_results.append({
+            "text": text,
+            "emotion": emotion
+        })
+
+    # 直近6件だけ保持（30秒相当）
+    global_results = global_results[-6:]
+    print(f"Current global results: {global_results}")
+
+    return jsonify({"words": global_results})
 
 if __name__ == '__main__':
     app.run(debug=True)

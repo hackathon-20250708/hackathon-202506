@@ -101,13 +101,15 @@
       const formData = new FormData();
       formData.append("audio", blob);
 
-      const res = await fetch("http://localhost:5000/analyze", {
+      const res = await fetch("http://localhost:5000/realTime", {
         method: "POST",
         body: formData
       });
 
       const data = await res.json();
       const resultDiv = document.getElementById("result");
+
+      resultDiv.innerHTML = "";
 
       data.words.forEach(item => {
         const span = document.createElement("span");
