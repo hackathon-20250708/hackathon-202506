@@ -30,12 +30,22 @@
         <p class="mic">マイクから録音</p>
         <button id="startBtn">録音開始</button>
         <button id="stopBtn" disabled>録音停止</button>
-      </div>
+          </div>
     </div>
 
-    
   </div>
-  <div class="result" id="result"></div> <!-- 結果表示エリア -->
+  <!-- 結果とローディングをまとめて result の中に置く -->
+  <div class="result" id="result">
+    <div id="loading" class="bubble-loader" style="display: none;">
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+  </div>
+
+
 
   <script>
     async function uploadAudio() {
@@ -43,14 +53,27 @@
       const formData = new FormData();
       formData.append("audio", file);
 
+      // ローディング表示ON
+      document.getElementById("loading").style.display = "flex";
+
       const res = await fetch("http://localhost:5000/analyze", {
         method: "POST",
         body: formData
       });
 
       const data = await res.json();
+
+      // ローディング表示OFF
+    document.getElementById("loading").style.display = "none";
+
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "";
+
+      // 結果だけ消す（loading を残す）
+      Array.from(resultDiv.children).forEach(child => {
+        if (child.id !== "loading") {
+          child.remove();
+        }
+      });
 
       data.words.forEach(item => {
         const span = document.createElement("span");
@@ -105,15 +128,25 @@
       const formData = new FormData();
       formData.append("audio", blob);
 
+      // ローディング表示ON
+      document.getElementById("loading").style.display = "flex";
+
       const res = await fetch("http://localhost:5000/realTime", {
         method: "POST",
         body: formData
       });
 
       const data = await res.json();
+      // 結果エリアだけをクリア（loading は除く）
       const resultDiv = document.getElementById("result");
 
-      resultDiv.innerHTML = "";
+      // 結果だけ消す（loading を残す）
+      Array.from(resultDiv.children).forEach(child => {
+        if (child.id !== "loading") {
+          child.remove();
+        }
+      });
+
 
       data.words.forEach(item => {
         const span = document.createElement("span");
@@ -121,6 +154,9 @@
         span.textContent = item.text + " ";
         resultDiv.appendChild(span);
       });
+
+      // ローディング表示OFF
+      document.getElementById("loading").style.display = "none";
     }
   </script>
 </body>
