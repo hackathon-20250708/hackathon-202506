@@ -18,12 +18,16 @@
       <p>※録音の場合、リアルタイムに結果が表示されます。終了時にのみ録音停止ボタンを押してください。</p>
     </div>
     
+    <div class="select">
     <input type="file" id="audioInput" accept="audio/*"> <!-- ファイル選択 -->
     <button onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
 
-    <p>または、マイクから録音：</p>
-    <button id="startBtn">録音開始</button>
-    <button id="stopBtn" disabled>録音停止</button>
+      <div class="realtime">
+        <p class="mic">マイクから録音</p>
+        <button id="startBtn">録音開始</button>
+        <button id="stopBtn" disabled>録音停止</button>
+      </div>
+    </div>
 
     
   </div>
