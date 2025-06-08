@@ -13,6 +13,10 @@
     <input type="file" id="audioInput" accept="audio/*"> <!-- ファイル選択 -->
     <button onclick="uploadAudio()">送信</button> <!-- 分析実行 -->
 
+    <p>または、マイクから録音：</p>
+    <button id="startBtn">録音開始</button>
+    <button id="stopBtn" disabled>録音停止</button>
+
     <div id="result"></div> <!-- 結果表示エリア -->
   </div>
 
@@ -30,6 +34,67 @@
       const data = await res.json();
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = "";
+
+      data.words.forEach(item => {
+        const span = document.createElement("span");
+        span.className = item.emotion;
+        span.textContent = item.text + " ";
+        resultDiv.appendChild(span);
+      });
+    }
+
+    // ↓録音機能追加↓
+    let mediaRecorder;
+    let chunks = [];
+    let intervalId;
+
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    startBtn.onclick = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        chunks = [];
+        sendRecordedBlob(blob);
+      };
+
+      mediaRecorder.start();
+      intervalId = setInterval(() => {
+        if (mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          mediaRecorder.start();
+        }
+      }, 5000);
+
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    };
+
+    stopBtn.onclick = () => {
+      clearInterval(intervalId);
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    };
+
+    async function sendRecordedBlob(blob) {
+      const formData = new FormData();
+      formData.append("audio", blob);
+
+      const res = await fetch("http://localhost:5000/analyze", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      const resultDiv = document.getElementById("result");
 
       data.words.forEach(item => {
         const span = document.createElement("span");

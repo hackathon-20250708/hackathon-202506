@@ -41,7 +41,7 @@ class AudioTranscriber:
             # 文字起こしリクエスト
             response = self.model.generate_content(
                 [
-                    "この音声ファイルの内容を日本語で文字起こししてください。",
+                    "この音声ファイルの内容を日本語で文字起こししてください。音声がないときは「no-voice」と返してください。",
                     uploaded_file
                 ]
             )

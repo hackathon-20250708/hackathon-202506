@@ -1,8 +1,10 @@
+# pip install pydub
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tempfile
 import os
-
+from pydub import AudioSegment
 
 from audio_spliter import split_wav_to_chunks
 from emotion_analyzer import analyze_emotion
@@ -11,61 +13,72 @@ from transcription import AudioTranscriber
 app = Flask(__name__)
 CORS(app)
 
+def convert_webm_to_wav(input_path):
+    """
+    webm形式の音声ファイルをwavに変換してパスを返す
+    """
+    output_path = input_path.replace(".webm", ".wav")
+    audio = AudioSegment.from_file(input_path, format="webm")
+    audio.export(output_path, format="wav")
+    return output_path
+
 @app.route('/analyze', methods=['POST'])
 def analyze_audio():
-    # file = request.files['audio']
-    
-    # # 一時ファイルとして保存
-    # with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-    #     file.save(tmp.name)
-    #     audio_path = tmp.name
+    file = request.files['audio']
 
-    # # 音声ファイルを1秒ごとに分割（1000ms）
-    # chunks = split_wav_to_chunks(audio_path, chunk_duration=5000)
+    # 一時ファイルとして保存（ファイル拡張子に注意）
+    ext = os.path.splitext(file.filename)[1]
+    suffix = ext if ext else ".webm"  # 録音データは拡張子なしの場合もある
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        file.save(tmp.name)
+        input_path = tmp.name
 
-    # # 文字起こしと感情分析のインスタンス
-    # transcriber = AudioTranscriber()
+    # 必要に応じてwebm → wavに変換
+    if suffix == ".webm":
+        audio_path = convert_webm_to_wav(input_path)
+        os.remove(input_path)  # 元のwebm削除
+    else:
+        audio_path = input_path
 
-    # results = []
-    # for chunk_io in chunks:
-    #     # 一時ファイルとして保存
-    #     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as chunk_tmp:
-    #         chunk_tmp.write(chunk_io.read())
-    #         chunk_path = chunk_tmp.name
+    # 音声ファイルを5秒ごとに分割
+    chunks = split_wav_to_chunks(audio_path, chunk_duration=5000)
 
-    #     # 感情分析
-    #     try:
-    #         emotion = analyze_emotion(chunk_path)
-    #     except Exception as e:
-    #         emotion = "err"
+    transcriber = AudioTranscriber()
+    results = []
 
-    #     # 文字起こし
-    #     try:
-    #         text = transcriber.transcribe(chunk_path)
-    #         # 余分な空白や改行を除去
-    #         text = text.strip().replace("\n", "")
-    #     except Exception as e:
-    #         text = "エラー"
+    for chunk_io in chunks:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as chunk_tmp:
+            chunk_tmp.write(chunk_io.read())
+            chunk_path = chunk_tmp.name
 
-    #     # 結果に追加
-    #     if text:  # 空でなければ
-    #         results.append({"text": text, "emotion": emotion})
+        try:
+            emotion = analyze_emotion(chunk_path)
+        except Exception as e:
+            emotion = "err"
 
-    #     os.remove(chunk_path)  # 一時ファイル削除
+        try:
+            text = transcriber.transcribe(chunk_path)
+            text = text.strip().replace("\n", "")
+        except Exception as e:
+            text = "エラー"
 
-    # os.remove(audio_path)  # 元のファイル削除
+        if text:
+            results.append({"text": text, "emotion": emotion})
 
-    # return jsonify({"words": results})
-    dummy_result = {
-        "words": [
-            {"text": "こんにちは", "emotion": "neu"},
-            {"text": "最悪", "emotion": "ang"},
-            {"text": "まあまあ", "emotion": "hap"},
-            {"text": "悲しい", "emotion": "sad"}
-        ]
-    }
-    return jsonify(dummy_result)
+        os.remove(chunk_path)
+
+    os.remove(audio_path)  # 元のファイル削除
+
+    return jsonify({"words": results})
+    # dummy_result = {
+    #     "words": [
+    #         {"text": "こんにちは", "emotion": "neu"},
+    #         {"text": "最悪", "emotion": "ang"},
+    #         {"text": "まあまあ", "emotion": "hap"},
+    #         {"text": "悲しい", "emotion": "sad"}
+    #     ]
+    # }
+    # return jsonify(dummy_result)
 
 if __name__ == '__main__':
     app.run(debug=True)
-
